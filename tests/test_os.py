@@ -9,9 +9,11 @@ import unittest
 
 
 class FSEncodingTests(unittest.TestCase):
-    def test_nop(self):
-        self.assertEqual(os.fsencode(b'abc\xff'), b'abc\xff')
+    def test_nop_unicode(self):
         self.assertEqual(os.fsdecode('abc\u0141'), 'abc\u0141')
+
+    def test_nop_bytes(self):
+        self.assertEqual(os.fsencode(b'abc\xff'), b'abc\xff')
 
     def test_identity(self):
         # assert fsdecode(fsencode(x)) == x
