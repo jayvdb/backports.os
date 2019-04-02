@@ -6,9 +6,12 @@ Partial backport of new functionality in Python 3.5's os module:
 
 Backport modifications are marked with "XXX backport" and "TODO backport".
 """
-from __future__ import unicode_literals
+from __future__ import absolute_import, unicode_literals
 
+import os as _os
 import sys
+
+_WIN = _os.name == 'nt'
 
 # XXX backport: unicode on Python 2
 _str = unicode if sys.version_info < (3,) else str
@@ -117,6 +120,8 @@ def _fscodec():
         the file system encoding is 'mbcs' (which is the default encoding).
         """
         if isinstance(filename, bytes):
+            if _WIN:
+                raise NotImplementedError('bytes on Windows not supported')
             return filename
         elif isinstance(filename, _str):
             if _HACK_AROUND_PY2_UTF8 or _HACK_AROUND_PY2_ASCII:
@@ -158,6 +163,8 @@ def _fscodec():
         if isinstance(filename, _str):
             return filename
         elif isinstance(filename, bytes):
+            if _WIN:
+                raise NotImplementedError('bytes on Windows not supported')
             if _HACK_AROUND_PY2_UTF8:
                 # XXX backport: See the remarks in fsencode() above.
                 #
